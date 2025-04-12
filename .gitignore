@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Secrets - ОЧЕНЬ ВАЖНО!
+.env*
+secrets.ini
+*.token
+
+# VS Code workspace settings (optional)
+.vscode/
