@@ -4,8 +4,7 @@ services:
   # Название сервиса (можешь придумать свое)
   telegram-bot:
     # Инструкция для сборки образа:
-    # Использовать Dockerfile из текущей директории (.)
-    build: .
+    image: romanvivchar7/zenhealingbot:latest
     # Имя контейнера (необязательно, но удобно)
     container_name: zenhealing_telegram_bot_container
     # Политика перезапуска:
