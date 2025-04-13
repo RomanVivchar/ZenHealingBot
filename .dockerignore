@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Python virtual environment
+.venv
+venv
+env
+*/.venv
+*/venv
+*/env
+
+# Python cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*-$py.class
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets file (shouldn't be copied into image!)
+.env*
+
+# Logs and temporary files
+*.log
+*.tmp
