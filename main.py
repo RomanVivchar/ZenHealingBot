@@ -10,12 +10,7 @@ from aiohttp import web
 
 from app.handlers.common import common_router
 
-logging.basicConfig(
-  level=logging.INFO,
-  format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
-  stream=sys.stdout,
-)
-log = logging.getLogger(__name__)
+
 
 
 # --- Функции жизненного цикла вебхука ---
@@ -101,5 +96,15 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    main()
+    logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    stream=sys.stdout)
+    log = logging.getLogger(__name__)
+
+    try:
+        # Запускаем асинхронную функцию main через asyncio.run()
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        # Обрабатываем прерывание (Ctrl+C) или завершение работы
+        log.info("Бот остановлен.")
