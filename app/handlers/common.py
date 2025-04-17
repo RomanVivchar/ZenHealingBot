@@ -10,7 +10,14 @@ common_router = Router(name="common-handlers")
 
 @common_router.message(CommandStart())
 async def handle_start(message: Message):
-  await message.answer(f"Привет {message.from_user.first_name}")
+  await message.answer("Добрый день, Вас приветствует ZenHealingBot — я помогу Вам пройти мини-диагностику, получить бесплатный или платный гайд, записаться на консультацию или сопровождение. " \
+  "\n Также Вы можете писать кодовые слова:" \
+  "\n - СТРЕСС → Антистресс-протокол (бесплатно)"
+  "\n - ЗАВТРАК → Полезные завтраки"
+  "\n - КУХНЯ → Безопасная кухня"
+  "\n - ПЕРЕЕДАЮ → Как перестать переедать вечером"
+  "\n - АППЕТИТ → Аппетит под контролем"
+  "\n - ДЕФИЦИТ → Питание при дефицитах")
 
 
 @common_router.message(Command("help"))
