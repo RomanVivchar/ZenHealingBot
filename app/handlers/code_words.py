@@ -1,6 +1,6 @@
 from aiogram import F, Router
 from aiogram.types import Message
-from main import bot
+from ..config.bot_instance import bot
 import logging
 from app.keyboards.inline import buy_guide_keyboard
 
@@ -8,7 +8,7 @@ code_words_router = Router(name="code_words_handlers")
 
 logger = logging.getLogger('aiogram')
 
-
+#! ДОБАВИТЬ ОПЛАТУ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 @code_words_router.message(F.text == "СТРЕСС")
 async def stress_word(message: Message):

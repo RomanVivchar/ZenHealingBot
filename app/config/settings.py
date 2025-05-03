@@ -21,12 +21,18 @@ class Settings(BaseSettings):
     # - Читать переменные из файла .env
     # - Кодировка файла .env
     # - Игнорировать лишние переменные в окружении
-    model_config = SettingsConfigDict(
-        env_file=BASE_DIR / '.env', # Ищем .env в корне проекта
-        env_file_encoding='utf-8',
-        extra='ignore'
-    )
+    
+    POSTGRESQL_HOST:str
+    POSTGRESQL_PORT:str
+    POSTGRESQL_USER:str
+    POSTGRESQL_PASSWORD:str
+    POSTGRESQL_DBNAME:str
 
+    @property
+    def DATABASE_URL_asyncpg(self):
+        return f"postgresql+asyncpg://{self.POSTGRESQL_USER}:{self.POSTGRESQL_PASSWORD}@{self.POSTGRESQL_HOST}:{self.POSTGRESQL_PORT}/{self.POSTGRESQL_DBNAME}"
+
+    
     # --- Основные настройки бота ---
     
     bot_token: SecretStr = Field(..., alias='BOT_TOKEN')
@@ -48,12 +54,13 @@ class Settings(BaseSettings):
     webhook_secret: SecretStr | None = Field(None, alias='WEBHOOK_SECRET')
 
 
-    # --- Валидация ---
-    @validator('webhook_path')
-    def check_webhook_path(cls, v):
-        if not v.startswith('/'):
-            raise ValueError("webhook_path должен начинаться с '/'")
-        return v
+    model_config = SettingsConfigDict(
+        env_file=BASE_DIR / '.env', # Ищем .env в корне проекта
+        env_file_encoding='utf-8',
+        extra='ignore'
+    )
+
+    
 
 # Создаем экземпляр настроек
 try:
