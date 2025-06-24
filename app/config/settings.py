@@ -22,15 +22,15 @@ class Settings(BaseSettings):
     # - Кодировка файла .env
     # - Игнорировать лишние переменные в окружении
     
-    POSTGRESQL_HOST:str
-    POSTGRESQL_PORT:str
-    POSTGRESQL_USER:str
-    POSTGRESQL_PASSWORD:str
-    POSTGRESQL_DBNAME:str
+    DB_HOST: str = Field(..., alias='DB_HOST')
+    DB_PORT: str = Field(..., alias='DB_PORT')
+    DB_USER: str = Field(..., alias='DB_USER')
+    DB_PASSWORD: str = Field(..., alias='DB_PASSWORD')
+    DB_NAME: str = Field(..., alias='DB_NAME')
 
     @property
     def DATABASE_URL_asyncpg(self):
-        return f"postgresql+asyncpg://{self.POSTGRESQL_USER}:{self.POSTGRESQL_PASSWORD}@{self.POSTGRESQL_HOST}:{self.POSTGRESQL_PORT}/{self.POSTGRESQL_DBNAME}"
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     
     # --- Основные настройки бота ---

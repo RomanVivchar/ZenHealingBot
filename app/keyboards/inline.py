@@ -1,26 +1,31 @@
-from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup, InlineKeyboardButton
-from ..states.states import SymptomCallback, SymptomDoneCallback, SYMPTOM_OPTIONS, EXCLUSIVE_OPTIONS
+from aiogram.utils.keyboard import (
+    InlineKeyboardBuilder,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
+
+from ..states.states import (
+    EXCLUSIVE_OPTIONS,
+    SYMPTOM_OPTIONS,
+    SymptomCallback,
+    SymptomDoneCallback,
+)
 
 
 def buy_guide_keyboard(url: str, button_text: str = "Купить PDF"):
-  builder = InlineKeyboardBuilder()
-  builder.button(
-    text=button_text,
-    url=url
-  )
-  return builder.as_markup()
+    builder = InlineKeyboardBuilder()
+    builder.button(text=button_text, url=url)
+    return builder.as_markup()
 
 
 def build_symptoms_keyboard(selected_keys: list[str]) -> InlineKeyboardBuilder:
 
-  builder = InlineKeyboardBuilder()
+    builder = InlineKeyboardBuilder()
 
-  for key, text in SYMPTOM_OPTIONS.items():
-    button_text = f"{'✅ ' if key in selected_keys else ' '}{text}"
-    builder.button(
-      text=button_text,
-      callback_data=SymptomCallback(key=key)
-    )
+    for key, text in SYMPTOM_OPTIONS.items():
+
+        button_text = f"{'✅ ' if key in selected_keys else ' '}{text}"
+        builder.button(text=button_text, callback_data=SymptomCallback(key=key))
 
     builder.button(text="Готово", callback_data=SymptomDoneCallback())
 
@@ -28,72 +33,133 @@ def build_symptoms_keyboard(selected_keys: list[str]) -> InlineKeyboardBuilder:
     return builder.as_markup()
 
 
+start_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="Пройти мини-диагностику", callback_data="diagnostics"
+            )
+        ],
+        [InlineKeyboardButton(text="Скачать гайд", callback_data="free_guide")],
+        [
+            InlineKeyboardButton(
+                text="О консультации", callback_data="about_consultation"
+            )
+        ],
+        [InlineKeyboardButton(text="Просто почитать", callback_data="just_read")],
+    ]
+)
 
 
-start_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-  [InlineKeyboardButton(text="Пройти мини-диагностику", callback_data="diagnostics")],
-  [InlineKeyboardButton(text="Скачать гайд", callback_data="free_guide")],
-  [InlineKeyboardButton(text="О консультации", callback_data="about_consultation")],
-  [InlineKeyboardButton(text="Просто почитать", callback_data="just_read")]
-])
+energy_morning_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Почти всегда", callback_data="Всегда")],
+        [InlineKeyboardButton(text="Иногда", callback_data="Иногда")],
+        [InlineKeyboardButton(text="Почти никогда", callback_data="Никогда")],
+    ]
+)
 
-# TODO: Изменить тг на Оксаны
-book_consultation = InlineKeyboardMarkup(inline_keyboard=[
-  [InlineKeyboardButton(text="Записаться на консультацию", url="https://t.me/")]
-])
+breakfast_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Только кофе / ничего", callback_data="Незавтрак")],
+        [
+            InlineKeyboardButton(
+                text="Сладкая выпечка / бутерброды", callback_data="Перекус"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Полноценный завтрак", callback_data="Полноценный завтрак"
+            )
+        ],
+    ]
+)
+
+intention_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Восстановить энергию", callback_data="Энергия")],
+        [InlineKeyboardButton(text="Перестать переедать", callback_data="Переедание")],
+        [InlineKeyboardButton(text="Выстроить завтрак", callback_data="Завтрак")],
+        [
+            InlineKeyboardButton(
+                text="Разобраться с дефицитами", callback_data="Дефициты"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Просто почитать / пока не знаю", callback_data="Незнаю"
+            )
+        ],
+    ]
+)
 
 
-energy_morning_kb = InlineKeyboardMarkup(inline_keyboard=[
-  [InlineKeyboardButton(text="Почти никогда", callback_data="Никогда")],
-  [InlineKeyboardButton(text="Иногда, но быстро уходит", callback_data="Иногда")],
-  [InlineKeyboardButton(text="Почти всегда, но к вечеру «сдуваюсь»", callback_data="Иногда")],
-  [InlineKeyboardButton(text="Все нормально, просто хочу разобраться", callback_data="Нормально")]
-])
+def build_scenario_deficits_keyboard():
+    # * Клавиатура для выдачи гайда "Питание при дефицитах"
+    builder = InlineKeyboardBuilder()
+    builder.button(text="📥 Получить гайд", callback_data="deficit_guide")
+    builder.button(
+        text="🗓 Записаться на консультацию", callback_data="about_consultation"
+    )
+    builder.button(text="🔁 Вернуться в меню", callback_data="main_menu")
 
-breakfast_kb = InlineKeyboardMarkup(inline_keyboard=[
-  [InlineKeyboardButton(text="Я не завтракаю", callback_data="Незавтрак")],
-  [InlineKeyboardButton(text="Кофе / перекус «на бегу»", callback_data="Перекус")],
-  [InlineKeyboardButton(text="Ем «потому что надо», но аппетита нет", callback_data="Надоесть")],
-  [InlineKeyboardButton(text="Полноценный завтрак, но не чувствую насыщения", callback_data="Полныйзавтрак")]
-])
+    builder.adjust(1)
 
-intention_kb = InlineKeyboardMarkup(inline_keyboard=[
-  [InlineKeyboardButton(text="Хочу просто рекомендации", callback_data="Рекомендации")],
-  [InlineKeyboardButton(text="Нужна помощь: чувствую, что не справляюсь", callback_data="Помощь")],
-  [InlineKeyboardButton(text="Хочу двигаться под сопровождением", callback_data="Сопровождение")],
-  [InlineKeyboardButton(text="Пока не знаю - просто хочу посмотреть", callback_data="Незнаю")]
-])
+    return builder.as_markup()
 
 
+def build_scenario_consultation_keyboard():
+    # * Клавиатура для консультации
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="Что входит в консультацию❔", callback_data="about_consultation"
+    )
+    builder.button(
+        text="🗓 Записаться на консультацию", callback_data="https://t.me/sharkova"
+    )  # TODO: добавить тгшку
+    builder.button(text="🔁 Вернуться в меню", callback_data="main_menu")
 
-def build_scenario_1_keyboard():
-  #* Клавиатура для выдачи гайда
-  builder = InlineKeyboardBuilder()
-  builder.button(text="О консультации", callback_data="about_consultation")
-  builder.button(text="Подписаться на каналы", callback_data="just_read")
+    builder.adjust(1)
 
-  builder.adjust(1)
-  
-  return builder.as_markup()
+    return builder.as_markup()
 
-def build_scenario_2_keyboard():
-  #* Клавиатура для консультации
-  builder = InlineKeyboardBuilder()
-  builder.button(text="Что входит в консультацию", callback_data="about_consultation")
-  builder.button(text="Записаться", callback_data="https://t.me/ ") # TODO: добавить тгшку
-  builder.button(text="Скачать гайд пока", callback_data="download_free_guide")
 
-  builder.adjust(1)
+def build_scenario_overeating_keyboard():
+    # * Клавиатура для выдачи гайда "Как перестать переедать вечером"
+    builder = InlineKeyboardBuilder()
+    builder.button(text="📥 Получить гайд", callback_data="overeating_guide")
+    builder.button(
+        text="🗓 Записаться на консультацию", callback_data="about_consultation"
+    )
+    builder.button(text="🔁 Вернуться в меню", callback_data="main_menu")
 
-  return builder.as_markup()
+    builder.adjust(1)
 
-def build_scenario_3_keyboard():
-  #* Клавиатура для сопровождения
-  builder = InlineKeyboardBuilder()
-  builder.button(text="Узнать подробнее", callback_data="about_support")
-  builder.button(text="оставить заявку", callback_data="book_support")
-  builder.button(text="Начать с консультации", callback_data="about_consultation")
+    return builder.as_markup()
 
-  builder.adjust(1)
 
-  return builder.as_markup()
+def build_scenario_breakfast_keyboard():
+    # * Клавиатура для выдачи гайда "Завтрак без хаоса"
+    builder = InlineKeyboardBuilder()
+    builder.button(text="📥 Получить гайд", callback_data="breakfast_guide")
+    builder.button(
+        text="🗓 Записаться на консультацию", callback_data="about_consultation"
+    )
+    builder.button(text="🔁 Вернуться в меню", callback_data="main_menu")
+
+    builder.adjust(1)
+
+    return builder.as_markup()
+
+
+def build_book_consultation_keyboard():
+    # * Клавиатура для консультации
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text="🗓 Записаться на консультацию", callback_data="https://t.me/sharkova"
+    )  # TODO: добавить тгшку
+    builder.button(text="🔁 Вернуться в меню", callback_data="main_menu")
+
+    builder.adjust(1)
+
+    return builder.as_markup()

@@ -28,3 +28,52 @@ services:
       options:
         max-size: '10m' # Максимальный размер лог-файла
         max-file: '3' # Количество хранимых лог-файлов
+    build: .
+    environment:
+      # Добавляем переменные окружения для подключения к БД
+      DATABASE_URL: postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      # ... другие переменные окружения для бота (токен и т.д.) ...
+      # Убедись, что DB_USER, DB_PASSWORD, DB_NAME, DB_PORT определены в .env файле,
+      # на который ссылается docker-compose или в секции environment
+    # Указываем зависимость от сервиса базы данных
+    depends_on:
+      - db
+    networks:
+      - bot_network # Объединяем сервисы в общую сеть
+
+  db:
+    image: postgres:14-alpine # Используем официальный образ PostgreSQL (можно выбрать другую версию, например 16-alpine)
+    container_name: zenhealing_postgres_db # Опционально, но удобно
+    env_file:
+      - .env
+    environment:
+      # Указываем переменные окружения для настройки PostgreSQL
+      # Имя пользователя и пароль для суперпользователя PostgreSQL
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      # Имя базы данных, которая будет создана по умолчанию
+      POSTGRES_DB: ${DB_NAME}
+      # Опционально: параметры локализации
+      # LANG: en_US.utf8
+      # LC_COLLATE: en_US.utf8
+      # LC_CTYPE: en_US.utf8
+    ports:
+      # Прокидываем порт PostgreSQL на хост машину (чтобы подключиться с pgAdmin)
+      # ЛЕВЫЙ порт - порт на хост машине, ПРАВЫЙ порт - порт внутри контейнера PostgreSQL (всегда 5432)
+      - '4870:5432' # Можно поменять 5432 слева на другой, если 5432 уже занят на хосте
+    volumes:
+      # Создаем постоянный том для хранения данных базы данных
+      # ЭТО ОЧЕНЬ ВАЖНО, чтобы данные не терялись при перезапуске контейнера!
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - bot_network # Объединяем сервисы в общую сеть
+    restart: always # Автоматический перезапуск контейнера при сбое
+
+# Определение томов
+volumes:
+  db_data: # Имя тома для данных базы данных
+
+# Определение сети
+networks:
+  bot_network:
+    driver: bridge
